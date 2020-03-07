@@ -1,6 +1,6 @@
 <template>
     <div class="sc-suggestions-row" :style="{background: colors.messageList.bg}">
-        <button class="sc-suggestions-element" v-for="(suggestion, idx) in suggestions" v-on:click="$emit('sendSuggestion', suggestion)" 
+        <button style="outline: none" class="sc-suggestions-element" v-for="(suggestion, idx) in suggestions" v-on:click="$emit('sendSuggestion', suggestion)"
         :style="{borderColor: colors.sentMessage.bg, color: colors.sentMessage.bg}" :key="idx">{{suggestion}}</button>
     </div>
 </template>
@@ -28,6 +28,7 @@ export default {
 .sc-suggestions-row {
   text-align: center;
   background: inherit;
+    margin-bottom: 30px;
 }
 
 .sc-suggestions-element {
@@ -36,7 +37,13 @@ export default {
   border: 1px solid;
   border-radius: 15px;
   font-size: 14px;
-  background: inherit;
+  background: #C84C93;
+  outline: none;
   cursor: pointer;
+  transition: 0.3s;
 }
+.sc-suggestions-element:hover {
+    background: #e051a6;
+}
+
 </style>

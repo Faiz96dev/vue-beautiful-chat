@@ -56,8 +56,6 @@ Vue.use(Chat)
       :showEmoji="true"
       :showFile="true"
       :showTypingIndicator="showTypingIndicator"
-	  :showLauncher="true"
-	  :showCloseButton="true"
       :colors="colors"
       :alwaysScrollToBottom="alwaysScrollToBottom"
       :messageStyling="messageStyling"

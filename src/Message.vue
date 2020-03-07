@@ -5,33 +5,38 @@
         received: message.author !== 'me' && message.type !== 'system',
         system: message.type === 'system'
       }">
-      <slot 
+      <slot
         name="user-avatar"
-        :message="message" 
+        :message="message"
         :user="user">
           <div v-if="message.type !== 'system'" :title="authorName" class="sc-message--avatar" :style="{
             backgroundImage: `url(${chatImageUrl})`
           }" v-tooltip="authorName"></div>
       </slot>
 
-      <TextMessage 
-        v-if="message.type === 'text'" 
-        :message="message" 
-        :messageColors="determineMessageColors()" 
+      <TextMessage
+        v-if="message.type === 'text'"
+        :message="message"
+        :messageColors="determineMessageColors()"
         :messageStyling="messageStyling"
         @remove="$emit('remove')">
+
           <template v-slot:default="scopedProps">
             <slot name="text-message-body" :message="scopedProps.message" :messageText="scopedProps.messageText" :messageColors="scopedProps.messageColors" :me="scopedProps.me">
             </slot>
           </template>
+
           <template v-slot:text-message-toolbox="scopedProps">
             <slot name="text-message-toolbox" :message="scopedProps.message" :me="scopedProps.me">
             </slot>
           </template>
       </TextMessage>
-      <EmojiMessage v-else-if="message.type === 'emoji'" :data="message.data" />
+
+<!--      <EmojiMessage v-else-if="message.type === 'emoji'" :data="message.data" />-->
       <FileMessage v-else-if="message.type === 'file'" :data="message.data" :messageColors="determineMessageColors()" />
-      <TypingMessage v-else-if="message.type === 'typing'" :messageColors="determineMessageColors()" />
+
+      <TypingMessage v-else-if="message.type === 'typing'" :messageColors="determineMessageColors()"/>
+
       <SystemMessage v-else-if="message.type === 'system'" :data="message.data" :messageColors="determineMessageColors()">
           <slot name="system-message-body" :message="message.data">
           </slot>

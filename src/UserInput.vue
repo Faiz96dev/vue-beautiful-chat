@@ -3,10 +3,10 @@
     <Suggestions :suggestions="suggestions" v-on:sendSuggestion="_submitSuggestion" :colors="colors"/>
     <div v-if="file" class='file-container' :style="{backgroundColor: colors.userInput.text, color: colors.userInput.bg}">
       <span class='icon-file-message'><img :src="icons.file.img"  :alt="icons.file.name" height="15" /></span>
-      {{file.name}}
       <span class='delete-file-message' @click="cancelFile()"><img :src="icons.closeSvg.img" :alt="icons.closeSvg.name" height="10" title='Remove the file' /></span>
     </div>
-    <form class="sc-user-input" :class="{active: inputActive}" :style="{background: colors.userInput.bg}">
+<!--    <form  v-if=" $store.state.authState === false && $store.state.currentKey " class="sc-user-input" :class="{active: inputActive}" :style="{background: colors.userInput.bg}">-->
+    <form  class="sc-user-input" :class="{active: inputActive}" :style="{background: colors.userInput.bg}">
       <div
         role="button"
         tabIndex="0"
@@ -21,7 +21,7 @@
         @focusUserInput="focusUserInput()"
       >
       </div>
-      <div class="sc-user-input--buttons">
+      <div  class="sc-user-input--buttons">
         <div class="sc-user-input--button"></div>
         <div v-if="showEmoji && !isEditing" class="sc-user-input--button">
           <EmojiIcon :onEmojiPicked="_handleEmojiPicked" :color="colors.userInput.text" />
@@ -38,7 +38,7 @@
           <user-input-button @click.native.prevent="_editText" v-if="isEditing" :color="colors.userInput.text" tooltip="Edit">
             <icon-ok />
           </user-input-button>
-          <user-input-button @click.native.prevent="_submitText" v-else :color="colors.userInput.text" tooltip="Send">
+          <user-input-button @click.native.prevent="_submitText" v-else :color="colors.userInput.text"  tooltip="Send">
             <icon-send />
           </user-input-button>
         </div>
@@ -58,6 +58,7 @@ import CloseIconSvg from './assets/close.svg'
 import store from "./store/"
 import IconCross from "./components/icons/IconCross.vue";
 import IconOk from "./components/icons/IconOk.vue";
+import axios from 'axios'
 import IconSend from "./components/icons/IconSend.vue";
 
 export default {
@@ -169,7 +170,8 @@ export default {
       }
     },
     _submitTextWhenFile(event, text, file) {
-      if (text && text.length > 0) {  
+      if (text && text.length > 0) {
+        console.log('text && text.length > 0')
         this.onSubmit({
           author: 'me',
           type: 'file',
@@ -178,6 +180,7 @@ export default {
         this.file = null
         this.$refs.userInput.innerHTML = ''
       } else {
+        console.log('ELSE')
         this.onSubmit({
           author: 'me',
           type: 'file',
@@ -206,7 +209,22 @@ export default {
       })
     },
     _handleFileSubmit (file) {
-      this.file = file
+      let formData = new FormData()
+      // this.file = this.$refs.fileData.files[0]
+      formData.append('userfile', file)
+      let url = 'http://api.ooba.kg/?url=files/upload2'
+      axios.post(url, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }).then(r => {
+        if (r.data.success === 1) {
+          this.file = r.data.url
+          console.log('Uploaded!')
+        }
+      })
+      // this.file = file
+      console.log('Handle Submit')
     },
     _editFinish(){
       this.store.editMessage = null;
@@ -288,7 +306,6 @@ export default {
   right: 30px;
   height: 100%;
   display: flex;
-  justify-content: flex-end;
 }
 
 .sc-user-input--button:first-of-type {

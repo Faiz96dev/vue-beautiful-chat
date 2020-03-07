@@ -91,5 +91,6 @@ export default {
   overflow-y: auto;
   background-size: 100%;
   padding: 40px 0px;
+  border-radius: 7px;
 }
 </style>
