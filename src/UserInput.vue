@@ -1,12 +1,16 @@
 <template>
   <div>
-    <Suggestions :suggestions="suggestions" v-on:sendSuggestion="_submitSuggestion" :colors="colors"/>
+    <Suggestions v-if="getSuggenstionsButtns" :suggestions="suggestions" v-on:sendSuggestion="_submitSuggestion" :colors="colors"/>
+
+    <div v-if="!getSuggenstionsButtns" style="display: flex; justify-content: center">
+      <img style="height: 60px;width: 60px; margin-bottom: 15px; " src="https://forge.codesys.com/forge/support/_discuss/thread/6f37666443/dbe4/attachment/ajax-loader.gif" alt="">
+    </div>
+
     <div v-if="file" class='file-container' :style="{backgroundColor: colors.userInput.text, color: colors.userInput.bg}">
       <span class='icon-file-message'><img :src="icons.file.img"  :alt="icons.file.name" height="15" /></span>
       <span class='delete-file-message' @click="cancelFile()"><img :src="icons.closeSvg.img" :alt="icons.closeSvg.name" height="10" title='Remove the file' /></span>
     </div>
-<!--    <form  v-if=" $store.state.authState === false && $store.state.currentKey " class="sc-user-input" :class="{active: inputActive}" :style="{background: colors.userInput.bg}">-->
-    <form  class="sc-user-input" :class="{active: inputActive}" :style="{background: colors.userInput.bg}">
+    <form  v-if=" !getSuggenstionsButtns || getCurrentKey !== '' || !getToken  " class="sc-user-input" :class="{active: inputActive}" :style="{background: colors.userInput.bg}">
       <div
         role="button"
         tabIndex="0"
@@ -60,6 +64,7 @@ import IconCross from "./components/icons/IconCross.vue";
 import IconOk from "./components/icons/IconOk.vue";
 import axios from 'axios'
 import IconSend from "./components/icons/IconSend.vue";
+import {mapGetters, mapMutations, mapState} from "vuex";
 
 export default {
   components: {
@@ -121,6 +126,7 @@ export default {
     }
   },
   methods: {
+    ...mapMutations("chatModule", ["suggenstionsButtns"]),
     cancelFile () {
       this.file = null
     },
@@ -151,6 +157,7 @@ export default {
       })
     },
     _submitSuggestion(suggestion) {
+      this.suggenstionsButtns(false)
       this.onSubmit({author: 'me', type: 'text', data: { text: suggestion }})
     },
     _submitText (event) {
@@ -171,7 +178,6 @@ export default {
     },
     _submitTextWhenFile(event, text, file) {
       if (text && text.length > 0) {
-        console.log('text && text.length > 0')
         this.onSubmit({
           author: 'me',
           type: 'file',
@@ -180,7 +186,6 @@ export default {
         this.file = null
         this.$refs.userInput.innerHTML = ''
       } else {
-        console.log('ELSE')
         this.onSubmit({
           author: 'me',
           type: 'file',
@@ -219,12 +224,11 @@ export default {
         }
       }).then(r => {
         if (r.data.success === 1) {
+          console.log(r.data.url)
           this.file = r.data.url
-          console.log('Uploaded!')
         }
       })
-      // this.file = file
-      console.log('Handle Submit')
+
     },
     _editFinish(){
       this.store.editMessage = null;
@@ -241,6 +245,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters("chatModule", ["getSuggenstionsButtns","getCurrentKey","getToken"]),
     editMessageId() {
       return this.isEditing && store.editMessage.id;
     },

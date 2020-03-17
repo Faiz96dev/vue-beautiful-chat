@@ -4,7 +4,7 @@
       <img :src="data.file" class="sc-image">
     </div>
     <div class='sc-message--file-name' :style="messageColors">
-<!--      <a :href="data.file ? data.file : '#'" target='_blank'>{{data.file || ''}}</a>-->
+      <a  :href="data.file ? data.file : '#'" target='_blank'>Скачать Фаил</a>
     </div>
     <div class="sc-message--file-text" :style="messageColors">{{data.text}}<p v-if="data.meta" class='sc-message--meta' :style="messageColors">{{data.meta}}</p></div>
   </div>
@@ -76,11 +76,12 @@ export default {
 
 .sc-message--file-name a {
   text-decoration: none;
-  color: #ece7e7;
+    font-size: 15px;
+  color: #4e4949;
 }
 
 .sc-message--file-name a:hover {
-  color: white;
+  color: #454545;
 }
 
 .sc-message--content.sent .sc-message--file-text {

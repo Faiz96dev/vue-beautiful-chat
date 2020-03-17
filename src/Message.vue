@@ -11,7 +11,8 @@
         :user="user">
           <div v-if="message.type !== 'system'" :title="authorName" class="sc-message--avatar" :style="{
             backgroundImage: `url(${chatImageUrl})`
-          }" v-tooltip="authorName"></div>
+          }" v-tooltip="authorName">
+          </div>
       </slot>
 
       <TextMessage
@@ -86,6 +87,9 @@ export default {
     }
   },
   methods: {
+      checkFile(){
+
+      },
     sentColorsStyle() {
       return {
         color: this.colors.sentMessage.text,

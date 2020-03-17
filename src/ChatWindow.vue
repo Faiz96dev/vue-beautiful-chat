@@ -1,33 +1,19 @@
 <template>
     <div class="sc-chat-window" :class="{opened: isOpen, closed: !isOpen}">
-        <!--    <Header-->
-        <!--      :title="title"-->
-        <!--      :imageUrl="titleImageUrl"-->
-        <!--      :onClose="onClose"-->
-        <!--      :colors="colors"-->
-        <!--      :disableUserListToggle="disableUserListToggle"-->
-        <!--      @userList="handleUserListToggle"-->
-        <!--    >-->
-        <!--      <template>-->
-        <!--        <slot name="header">-->
-        <!--        </slot>-->
-        <!--      </template>-->
-        <!--    </Header>-->
 
         <div style=" border-top-right-radius: 3px; border-top-left-radius: 3px; display: flex; align-items: flex-end; background-color: #C84C93; height: 33px "
-             v-if="$store.getters.authState">
-            <div :class="{'active':$store.state.currentKey===item._id}" @click="getMsgs(item)"
-                 style="text-align: center;" v-for="item in $store.getters.rooms">
+             v-if="getToken">
+            <div :class="{'active':currentKey===item._id}" @click="getMsgs(item)"
+                 style="text-align: center;" v-for="item in getRooms" :key="item._id">
                 <span @click="getMsgs(item)" class="rooms"
                       style="font-size: 13px; cursor: pointer">№  {{item.uniqID}}
                     <span v-if="item.unread > 0" class="unread">{{item.unread}}</span>
                 </span>
             </div>
             <div class="msg_wrap">
-                <img :class="{'active_msg':!$store.state.currentKey}" class="new_msg" @click="openMsgCreate"
+                <img :class="{'active_msg':!currentKey}" class="new_msg" @click="openMsgCreate"
                      src="../../../public/images/add.svg" alt="">
             </div>
-
         </div>
 
         <UserList v-if="showUserList" :participants="participants"/>
@@ -70,7 +56,7 @@
                 @onType="$emit('onType')"
                 @edit="$emit('edit', $event)"
                 :colors="colors"/>
-        <NewMessage :opened="$store.state.openMessageCreate" v-on:close-it="openMessageCreate = false"></NewMessage>
+        <NewMessage :opened="openMessageCreate" v-on:close-it="openMessageCreate = false"></NewMessage>
     </div>
 </template>
 
@@ -80,6 +66,7 @@
     import UserInput from './UserInput.vue'
     import UserList from './UserList.vue'
     import NewMessage from '@/components/NewMessageFB.vue';
+    import {mapActions, mapGetters, mapMutations, mapState} from "vuex";
 
     export default {
         components: {
@@ -160,16 +147,20 @@
             messages() {
                 let messages = this.messageList
                 return messages
-            }
+            },
+            ...mapGetters("chatModule", ["getCompletedRooms","getToken", "getRooms"]),
+            ...mapState("chatModule", ["selected", "currentKey","messageListForModal","authMsgCounter","openMessageCreate"])
         },
         methods: {
+            ...mapActions("chatModule", ["loadRoomsForBig", "loadCompletedRooms", "loadRooms", "loadStartRoom", "autoAnswer","loadChat" ]),
+            ...mapMutations("chatModule", ["setMessageOpenModal", "updateNots", "setAuthMsgCounter", "setCurrentKey"]),
             openMsgCreate() {
-                this.$store.dispatch('loadStartRoom')
+                this.loadStartRoom()
             },
             getMsgs(item) {
                 let key = item._id
-                this.$store.commit('setCurrentKey', key)
-                this.$store.dispatch('loadChat', key)
+                this.setCurrentKey(key)
+                this.loadChat(key)
             },
             handleUserListToggle(showUserList) {
                 this.showUserList = showUserList
