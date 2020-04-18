@@ -15,8 +15,6 @@
       :onMessageWasSent="onMessageWasSent"
       :open="openChat"
       :participants="participants"
-      :showCloseButton="true"
-      :showLauncher="true"
       :showEmoji="true"
       :showFile="true"
       :showTypingIndicator="showTypingIndicator"

@@ -64,7 +64,7 @@ import IconCross from "./components/icons/IconCross.vue";
 import IconOk from "./components/icons/IconOk.vue";
 import axios from 'axios'
 import IconSend from "./components/icons/IconSend.vue";
-import {mapGetters, mapMutations, mapState} from "vuex";
+import {mapActions, mapGetters, mapMutations, mapState} from "vuex";
 
 export default {
   components: {
@@ -127,6 +127,7 @@ export default {
   },
   methods: {
     ...mapMutations("chatModule", ["suggenstionsButtns"]),
+    ...mapActions("chatModule", ["uploadFileData"]),
     cancelFile () {
       this.file = null
     },
@@ -163,18 +164,24 @@ export default {
     _submitText (event) {
       const text = this.$refs.userInput.textContent
       const file = this.file
-      if (file) {
-        this._submitTextWhenFile(event, text, file)
-      } else {
-        if (text && text.length > 0) {
-          this.onSubmit({
-            author: 'me',
-            type: 'text',
-            data: { text }
-          });
-          this.$refs.userInput.innerHTML = ''
-        }
-      }
+      this.onSubmit({
+        author: 'me',
+        type: 'text',
+        data: { text }
+      });
+      this.$refs.userInput.innerHTML = ''
+      // if (file) {
+      //   this._submitTextWhenFile(event, text, file)
+      // } else {
+      //   if (text && text.length > 0) {
+      //     this.onSubmit({
+      //       author: 'me',
+      //       type: 'text',
+      //       data: { text }
+      //     });
+      //     this.$refs.userInput.innerHTML = ''
+      //   }
+      // }
     },
     _submitTextWhenFile(event, text, file) {
       if (text && text.length > 0) {
@@ -214,20 +221,22 @@ export default {
       })
     },
     _handleFileSubmit (file) {
-      let formData = new FormData()
-      // this.file = this.$refs.fileData.files[0]
-      formData.append('userfile', file)
-      let url = 'http://api.ooba.kg/?url=files/upload2'
-      axios.post(url, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      }).then(r => {
-        if (r.data.success === 1) {
-          console.log(r.data.url)
-          this.file = r.data.url
-        }
-      })
+      console.log(file)
+      this.uploadFileData(file)
+      // let formData = new FormData()
+      // // this.file = this.$refs.fileData.files[0]
+      // formData.append('userfile', file)
+      // let url = 'http://api.ooba.kg/?url=files/upload2'
+      // axios.post(url, formData, {
+      //   headers: {
+      //     'Content-Type': 'multipart/form-data'
+      //   }
+      // }).then(r => {
+      //   if (r.data.success === 1) {
+      //     console.log(r.data.url)
+      //     this.file = r.data.url
+      //   }
+      // })
 
     },
     _editFinish(){
