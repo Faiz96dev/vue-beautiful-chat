@@ -1,18 +1,19 @@
 <template>
     <div class="sc-chat-window" :class="{opened: isOpen, closed: !isOpen}">
-
         <div style=" border-top-right-radius: 3px; border-top-left-radius: 3px; display: flex; align-items: flex-end; background-color: #C84C93; height: 33px "
              v-if="getToken">
-            <div :class="{'active':currentKey===item._id}" @click="getMsgs(item)"
+
+            <div :class="{'active':getCurrentKey===item._id}" @click="getMsgs(item)"
                  style="text-align: center;" v-for="item in getRooms" :key="item._id">
                 <span @click="getMsgs(item)" class="rooms"
                       style="font-size: 13px; cursor: pointer">№  {{item.uniqID}}
                     <span v-if="item.unread > 0" class="unread">{{item.unread}}</span>
                 </span>
             </div>
+          <img src="assets/add.svg" alt="">
             <div class="msg_wrap">
-                <img :class="{'active_msg':!currentKey}" class="new_msg" @click="openMsgCreate"
-                     src="../../../public/images/add.svg" alt="">
+                <img :class="{'active_msg':!getCurrentKey}" class="new_msg" @click="openMsgCreate"
+                     src="./assets/add.svg" alt="">
             </div>
         </div>
 
@@ -56,7 +57,7 @@
                 @onType="$emit('onType')"
                 @edit="$emit('edit', $event)"
                 :colors="colors"/>
-        <NewMessage :opened="openMessageCreate" v-on:close-it="openMessageCreate = false"></NewMessage>
+<!--        <NewMessage :opened="openMessageCreate" v-on:close-it="openMessageCreate = false"></NewMessage>-->
     </div>
 </template>
 
@@ -65,7 +66,7 @@
     import MessageList from './MessageList.vue'
     import UserInput from './UserInput.vue'
     import UserList from './UserList.vue'
-    import NewMessage from '@/components/NewMessageFB.vue';
+    // import NewMessage from '@/components/NewMessageFB.vue';
     import {mapActions, mapGetters, mapMutations, mapState} from "vuex";
 
     export default {
@@ -73,8 +74,8 @@
             Header,
             MessageList,
             UserInput,
-            UserList,
-            NewMessage
+            UserList
+            // NewMessage
         },
         props: {
             showEmoji: {
@@ -148,12 +149,46 @@
                 let messages = this.messageList
                 return messages
             },
-            ...mapGetters("chatModule", ["getCompletedRooms","getToken", "getRooms"]),
-            ...mapState("chatModule", ["selected", "currentKey","messageListForModal","authMsgCounter","openMessageCreate"])
+            ...mapGetters(
+              {
+                getCompletedRooms: 'chat/getCompletedRooms',
+                getToken: 'chat/getToken',
+                getRooms: 'chat/getRooms',
+                getCurrentKey: 'chat/getCurrentKey',
+              }
+            ),
+
+
+            ...mapState(
+              {
+                selected: 'chat/selected',
+                currentKey: 'chat/currentKey',
+                messageListForModal: 'chat/messageListForModal',
+                authMsgCounter: 'chat/authMsgCounter',
+                openMessageCreate: 'chat/openMessageCreate',
+              }
+            )
         },
         methods: {
-            ...mapActions("chatModule", ["loadRoomsForBig", "loadCompletedRooms", "loadRooms", "loadStartRoom", "autoAnswer","loadChat" ]),
-            ...mapMutations("chatModule", ["setMessageOpenModal", "updateNots", "setAuthMsgCounter", "setCurrentKey"]),
+            ...mapActions(
+      {
+        loadRoomsForBig: 'chat/loadRoomsForBig',
+        loadCompletedRooms: 'chat/loadCompletedRooms',
+        loadRooms: 'chat/loadRooms',
+        loadStartRoom: 'chat/loadStartRoom',
+        autoAnswer: 'chat/autoAnswer',
+        loadChat: 'chat/loadChat',
+      }
+
+    ),
+            ...mapMutations(
+              {
+                setMessageOpenModal: 'chat/setMessageOpenModal',
+                updateNots: 'chat/updateNots',
+                setAuthMsgCounter: 'chat/setAuthMsgCounter',
+                setCurrentKey: 'chat/setCurrentKey',
+              }
+            ),
             openMsgCreate() {
                 this.loadStartRoom()
             },
@@ -180,7 +215,6 @@
     }
 
     .active_msg {
-        /*background-color: white;*/
         border-bottom: 2px solid white;
         padding: 2px;
         border-radius: 2px;
@@ -230,6 +264,7 @@
     }
 
     .sc-chat-window {
+        z-index: 1000;
         border: 2px solid #C84C93;
         width: 350px;
         height: calc(100% - 220px);

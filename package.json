@@ -1,28 +1,32 @@
 {
-  "_from": "vue-beautiful-chat@^2.3.1",
+  "_from": "github:Faiz96dev/vue-beautiful-chat",
   "_id": "vue-beautiful-chat@2.3.1",
   "_inBundle": false,
-  "_integrity": "sha512-JVKYEYuUGvLG1QpBHTe+KuZ7jSCEcxJddwvsJHNPGRYuRa4iFkFxFBxE88gy0b1wTn59N2W89bZ54vKyc5jBvQ==",
+  "_integrity": "",
   "_location": "/vue-beautiful-chat",
-  "_phantomChildren": {},
+  "_phantomChildren": {
+    "eslint-utils": "1.4.3",
+    "ignore": "5.1.4",
+    "minimatch": "3.0.4",
+    "regexpp": "2.0.1",
+    "resolve": "1.15.0"
+  },
   "_requested": {
-    "type": "range",
-    "registry": true,
-    "raw": "vue-beautiful-chat@^2.3.1",
-    "name": "vue-beautiful-chat",
-    "escapedName": "vue-beautiful-chat",
-    "rawSpec": "^2.3.1",
-    "saveSpec": null,
-    "fetchSpec": "^2.3.1"
+    "type": "git",
+    "raw": "Faiz96dev/vue-beautiful-chat",
+    "rawSpec": "Faiz96dev/vue-beautiful-chat",
+    "saveSpec": "github:Faiz96dev/vue-beautiful-chat",
+    "fetchSpec": null,
+    "gitCommittish": null
   },
   "_requiredBy": [
     "#USER",
     "/"
   ],
-  "_resolved": "https://registry.npmjs.org/vue-beautiful-chat/-/vue-beautiful-chat-2.3.1.tgz",
+  "_resolved": "github:Faiz96dev/vue-beautiful-chat#22160a96ea05aa335286a045cfdee48e67846bcf",
   "_shasum": "e79a9f68f86485496738743e9b52b53a6bdaa3b5",
-  "_spec": "vue-beautiful-chat@^2.3.1",
-  "_where": "C:\\Users\\Фаиз\\Documents\\GitHub\\Ooba-general",
+  "_spec": "Faiz96dev/vue-beautiful-chat",
+  "_where": "/home/fazyr/Документы/projects/frontend-3.0/pages",
   "author": {
     "name": "Matteo Merola",
     "email": "mattmezza@gmail.com"

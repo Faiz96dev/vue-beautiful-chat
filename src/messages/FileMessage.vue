@@ -2,7 +2,7 @@
     <div class='sc-message--file'  :style="messageColors">
         <div v-for="(img ,index) in data.file" :key="index">
             <div       v-if="img.indexOf('.gif') > 0|| img.indexOf('png') > 0 ||img.indexOf('.jpg') > 0|| img.indexOf('.jpeg') > 0"     class='sc-message--file-icon'>
-                <img :src="img" class="sc-image">
+                <img alt="img" :src="img" class="sc-image">
             </div>
 
 
@@ -42,9 +42,9 @@
         },
         mounted() {
             {
-                {
-                    data.file
-                }
+                // {
+                //     data.file
+                // }
             }
         }
     }
@@ -142,7 +142,6 @@
         text-decoration: none;
         color: #A6BCD6;
         font-size: 12px;
-        font-family: Roboto;
         cursor: pointer;
     }
 

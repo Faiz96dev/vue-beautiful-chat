@@ -40,7 +40,12 @@ export default {
     }
   },
 	computed:{
-	...mapGetters("chatModule", ["getFileLoader", "getFileData"]),
+	...mapGetters(
+    {
+      getFileLoader:'chat/getFileLoader',
+      getFileData:'chat/getFileData',
+    }
+  ),
 	},
   methods: {
     _handleClick (e) {
